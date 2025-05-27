@@ -1,0 +1,26 @@
+{
+  "name": "majorproject",
+  "version": "1.0.0",
+  "description": "AirBnb Clone",
+  "homepage": "https://github.com/kashyap-1811/AirBnb-Replica#readme",
+  "bugs": {
+    "url": "https://github.com/kashyap-1811/AirBnb-Replica/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kashyap-1811/AirBnb-Replica.git"
+  },
+  "license": "ISC",
+  "author": "Kashyap Rupareliya",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "method-override": "^3.0.0",
+    "mongoose": "^8.15.0"
+  }
+}
