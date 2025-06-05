@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 
+const multer = require('multer');
+const {cloudinary, storage} = require('../cloudConfig.js');
+const upload = multer({storage});
+
 //------------------------------------------------------------------------------------------------
 const { isLoggedIn, isOwner } = require('../middleware.js');
 const ListingController = require('../controller/listing.js');
@@ -14,7 +18,7 @@ router.get('/', ListingController.index);
 router.get('/new', isLoggedIn, ListingController.newListingForm);
 
 // create route
-router.post('/', ListingController.newListingPost);
+router.post('/', upload.single('Listing[image][url]'), ListingController.newListingPost);
 
 //------------------------------------------------------------------------------------------------
 // show route

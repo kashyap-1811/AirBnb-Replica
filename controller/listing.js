@@ -23,7 +23,7 @@ module.exports.newListingPost = wrapAsync(async (req, res, next) => {
         throw new ExpressError(400, msg);
     }
 
-    const { title, description, price, location, country, image } = req.body.Listing;
+    const { title, description, price, location, country } = req.body.Listing;
 
     const newListing = new Listing({
         title,
@@ -32,7 +32,8 @@ module.exports.newListingPost = wrapAsync(async (req, res, next) => {
         location,
         country,
         image: {
-            url: (image && image.url) || undefined, // allows schema default to work
+            filename: req.file.filename,
+            url: req.file.path || undefined,
         },
         owner: req.user._id,
     });

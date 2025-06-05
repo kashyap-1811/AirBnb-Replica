@@ -1,5 +1,8 @@
 //------------------------------------------------------------------------------------------------
 //imports
+if(process.env.NODE_ENV != 'PRODUCTION')
+    require('dotenv').config();
+
 const express = require('express');
 const app = express();
 
