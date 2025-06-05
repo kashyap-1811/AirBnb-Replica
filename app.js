@@ -1,3 +1,5 @@
+//------------------------------------------------------------------------------------------------
+//imports
 const express = require('express');
 const app = express();
 
@@ -5,167 +7,114 @@ app.listen(8080, () => {
     console.log(`app listening on port 8080`);
 });
 
-const listing = require('./models/listing.js');
-
-
 //------------------------------------------------------------------------------------------------
-
 const path = require("path");
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname + "/views"));
-app.use(express.static(path.join(__dirname, 'public')));
+const mongoose = require('mongoose');
+const methodOverride = require("method-override");
+const ejsMate = require('ejs-mate');
+const ExpressError = require('./utils/ExpressError.js');
+const flash = require('connect-flash');
+// const wrapAsync = require('./utils/wrapAsync.js');
 
-app.use(express.urlencoded({extended: true}));
-app.use(express.json());
-
-const methoOverride = require("method-override");
-const { parseArgs } = require('util');
-app.use(methoOverride('_method'));
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require("./models/user.js");
 
 //------------------------------------------------------------------------------------------------
 
-const mongoose = require('mongoose');
-const Listing = require('./models/listing.js');
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views")); // fixed use of path.join
+app.engine('ejs', ejsMate);
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(methodOverride('_method'));
+
+//------------------------------------------------------------------------------------------------
+
 main()
-.then(() => {console.log("Connected to MongoDB")})
-.catch(err => console.log(err));
+    .then(() => { console.log("Connected to MongoDB") })
+    .catch(err => console.log(err));
 
 async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
-
-  // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
+    await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
 }
 
 //------------------------------------------------------------------------------------------------
-//root
+//Sessions
+const session = require('express-session');
+
+const sessionOption = {
+    secret: "mysecretcode",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        expires: Date.now() + 7*24*60*60*1000,
+        maxAge: 7*24*60*60*1000,
+        httpOnly: true,
+    }
+};
+
+app.use(session(sessionOption));
+app.use(flash());
+
+//------------------------------------------------------------------------------------------------
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+//------------------------------------------------------------------------------------------------
+//flash middleware
+app.use((req,res,next) => {
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    res.locals.loggedIN = req.isAuthenticated();
+    res.locals.user = req.user;
+    next();
+});
+
+//------------------------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------------------------
+// root
 app.get('/', (req, res) => {
-    res.send("Welcome to AirBnb Clone");
+    res.render("home.ejs");
 });
 
 //------------------------------------------------------------------------------------------------
-//index route
-app.get('/listings', async (req, res) => {
-    let allListings = await Listing.find({});
+const listingRoutes = require('./routes/listing.js');
+const reviewRoutes = require('./routes/reviews.js');
+const UserRoutes= require('./routes/user.js');
 
-    res.render('listings/index.ejs', {allListings});
+//------------------------------------------------------------------------------------------------
+//listings routes
+app.use('/listings', listingRoutes);
+
+//------------------------------------------------------------------------------------------------
+//Reviews routes
+app.use('/listings/:id/reviews', reviewRoutes);
+
+//------------------------------------------------------------------------------------------------
+//User routes
+app.use('/', UserRoutes);
+
+//------------------------------------------------------------------------------------------------
+// common error
+app.all(/.*/, (req, res, next) => {
+    next(new ExpressError(404, 'Page Not Found!'));
 });
 
-//------------------------------------------------------------------------------------------------
-//new route
-app.get('/listings/new', (req, res) => {
-    res.render('listings/new.ejs');
-})
+app.use((err, req, res, next) => {
+    const { status = 500, message = "Something went wrong!" } = err;
 
-//create route
-app.post('/listings', async (req, res) => {
-    const {title, description, price, location, country} = req.body;
-    const newListing = new Listing({
-        title,
-        description,
-        price,
-        location,
-        country
-    });
-
-    await newListing.save();
-    res.redirect('/listings');
+    if (status == 500)
+        err.message - "Something Went Wrong";
+    res.status(status).render("error", { err });
 });
-
-//------------------------------------------------------------------------------------------------
-//show route
-app.get('/listings/:id', async (req, res) => {
-    const {id} = req.params;
-    const listing = await Listing.findById(id);
-
-    res.render('listings/show.ejs', {listing});
-});
-
-//------------------------------------------------------------------------------------------------
-//Update route
-app.get('/listings/:id/edit', async (req, res) => {
-    const {id} = req.params;
-    const listing = await Listing.findById(id);
-    res.render('listings/edit.ejs', {listing});
-});
-
-app.patch('/listings/:id', async (req, res) => {
-    const { id } = req.params;
-    const { title, description, price, location, country } = req.body;
-
-    await Listing.findByIdAndUpdate(id, {
-        title,
-        description,
-        price,
-        location,
-        country
-    });
-
-    res.redirect(`/listings/${id}`);
-});
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------------------------
 

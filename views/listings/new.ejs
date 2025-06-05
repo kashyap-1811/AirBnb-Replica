@@ -1,25 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Listing</title>
-</head>
+<% layout("/layouts/boilerplate.ejs") %>
+
 <body>
-    <h3>Create a New Listing</h3>
-    <form method="POST" action="/listings">
-        <input type="text" name="title" placeholder="title" required>
-        <br>
-        <textarea name="description" placeholder="Description"></textarea>
-        <br>
-        <input type="number" name="price" placeholder="Price" >
-        <br>
-        <input type="text"  name="location" placeholder="Location">
-        <br>
-        <input type="text" name="country" placeholder="country">
-        <br>
-        <button>Add</button>
-        <br>
-    </form>
+  <div class="container my-5">
+    <div class="row flex-column flex-lg-row align-items-center shadow-lg rounded-4 overflow-hidden">
+
+      <!-- Left: Image -->
+      <div class="col-12 col-lg-7 p-0 fade-in">
+        <img src="https://cdn141.picsart.com/238055402063202.jpg?to=crop&type=webp&r=580x1003&q=85"
+             class="img-fluid w-100 h-100 object-fit-cover"
+             style="object-position: center; height: 100%; object-fit: cover;" alt="Listing Image">
+      </div>
+
+      <!-- Right: Create Listing Form -->
+      <div class="col-12 col-lg-5 p-5 bg-white fade-in">
+        <h3 class="mb-4 text-center fw-semibold">Create a New Listing</h3>
+
+        <form method="POST" action="/listings" class="needs-validation" novalidate>
+          <!-- Title -->
+          <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control rounded-pill" id="title" name="Listing[title]" placeholder="Give your title over here" required>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please enter a title.</div>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control rounded-4" id="description" name="Listing[description]" placeholder="Write a short description..." rows="3" required></textarea>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please enter a description.</div>
+          </div>
+
+          <!-- Price -->
+          <div class="mb-3">
+            <label for="price" class="form-label">Price (per night)</label>
+            <input type="number" class="form-control rounded-pill" id="price" name="Listing[price]" placeholder="Enter price" required>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please enter a valid price.</div>
+          </div>
+
+          <!-- Location -->
+          <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" class="form-control rounded-pill" id="location" name="Listing[location]" placeholder="Enter city or area" required>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please enter a location.</div>
+          </div>
+
+          <!-- Country -->
+          <div class="mb-3">
+            <label for="country" class="form-label">Country</label>
+            <input type="text" class="form-control rounded-pill" id="country" name="Listing[country]" placeholder="India" required>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please enter a country.</div>
+          </div>
+
+          <!-- Image URL -->
+          <div class="mb-4">
+            <label for="image" class="form-label">Image URL</label>
+            <input type="url" class="form-control rounded-pill" id="image" name="Listing[image][url]" placeholder="https://example.com/image.jpg" required>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please enter a valid image URL.</div>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-danger btn-lg rounded-pill">Add Listing</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
 </body>
-</html>

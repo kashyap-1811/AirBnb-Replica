@@ -1,24 +1,149 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WanderLust</title>
-</head>
-<body>
-    <h3>Listings Details: </h3>
+<% layout("/layouts/boilerplate.ejs") %>
 
-    <ul>
-        <li><%= listing.title %></li>
-        <li><%= listing.description %></li>
-        <li> &#x20B9; <%= listing.price.toLocaleString("en-IN") %></li>
-        <li><%= listing.location %></li>
-        <li><%= listing.country %></li>
-        <li><a href="<%= listing.image.url %>"><%= listing.image.url %></a></li>
-    </ul>
+  <body>
+    <div class="container px-3 px-md-5 mt-5 mb-5">
 
-    <form method="GET" action="/listings/<%= listing._id %>/edit">
-        <button>Edit</button>
-    </form>
-</body>
-</html>
+      <!-- ROW 1: Image + Details -->
+      <div class="row g-0 min-vh-100">
+        <div class="col-lg-7 d-lg-block">
+          <div class="h-100">
+            <img src="<%= listing.image.url %>" alt="<%= listing.title %>"
+              class="card shadow-lg img-fluid h-100 w-100 object-fit-cover rounded-start-4">
+          </div>
+        </div>
+
+        <div class="col-lg-5 col-md-12">
+          <div class="card shadow-lg rounded-end-4 h-100 border-0">
+            <div class="card-body p-5 d-flex flex-column justify-content-center h-100">
+              <h2 class="card-title fw-bold mb-3">
+                <%= listing.title %>
+              </h2>
+              <p class="card-text"><strong>Owned By:</strong> <i>
+                  <%= listing.owner.username %>
+                </i></p>
+              <p class="card-text text-muted mb-3">
+                <%= listing.description %>
+              </p>
+              <p class="card-text fs-5">₹ <%= listing.price !=null ? listing.price.toLocaleString("en-IN") : "N/A" %>
+                  /night</p>
+              <p class="card-text"><strong>Location:</strong>
+                <%= listing.location %>
+              </p>
+              <p class="card-text"><strong>Country:</strong>
+                <%= listing.country %>
+              </p>
+
+              <% if (loggedIN && listing.owner._id.equals(user._id)) { %>
+                <div class="d-flex justify-content-between mt-4">
+                  <form method="GET" action="/listings/<%= listing._id %>/edit">
+                    <button class="btn btn-outline-primary rounded-pill px-4" type="submit">Edit</button>
+                  </form>
+                  <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE"
+                    onsubmit="return confirmDelete();">
+                    <button class="btn btn-outline-danger rounded-pill px-4" type="submit">Delete</button>
+                  </form>
+                </div>
+                <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="my-4"></div>
+
+      <!-- ROW 2: Review Form + Reviews -->
+      <div class="row justify-content-center g-4">
+        <!-- Leave Review -->
+        <div class="col-lg-7 col-md-10 mx-auto">
+          <div class="card shadow-lg rounded-4 h-100">
+            <div class="card-body p-4">
+              <h3 class="card-title fw-bold mb-3">Leave a Review</h3>
+              <form action="/listings/<%= listing._id %>/reviews" method="POST" class="needs-validation" novalidate>
+                <div class="mb-3">
+                  <label for="comment" class="form-label">Your Comment</label>
+                  <textarea name="review[comment]" id="comment" class="form-control" rows="4" required
+                    placeholder="Share your experience..."></textarea>
+                  <div class="invalid-feedback">Please enter your comment.</div>
+                </div>
+
+                <div class="mb-4">
+                  <label for="rating" class="form-label">Rating</label>
+                  <select name="review[rating]" id="rating" class="form-select" required>
+                    <option value="">Select Rating</option>
+                    <% for (let i=1; i <=5; i++) { %>
+                      <option value="<%= i %>">
+                        <%= i %> Star<%= i> 1 ? 's' : '' %>
+                      </option>
+                      <% } %>
+                  </select>
+                  <div class="invalid-feedback">Please select a rating between 1 and 5.</div>
+                </div>
+
+                <button type="submit" class="btn btn-outline-success rounded-pill px-4">Submit Review</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Show Reviews -->
+        <div class="col-lg-5 col-md-10 mx-auto">
+          <div class="card shadow-lg rounded-4 h-100">
+            <div class="card-body p-4">
+              <h4 class="card-title fw-semibold mb-3">What People Say</h4>
+
+              <% if (listing.reviews.length===0) { %>
+                <p class="text-muted">No reviews yet. Be the first to leave one!</p>
+                <% } else { %>
+                  <% listing.reviews.slice(0, 3).forEach((review)=> { %>
+                    <div class="mb-4 pb-3 border-bottom">
+                      <!-- Username & Stars -->
+                      <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div class="d-flex align-items-center gap-2">
+                          <i class="bi bi-person-circle fs-5 text-secondary"></i>
+                          <strong>
+                            <%= review.author?.username || "Anonymous" %>
+                          </strong>
+                        </div>
+                        <div class="text-end">
+                          <div class="text-warning">
+                            <% for (let i=1; i <=review.rating; i++) { %>
+                              <i class="bi bi-star-fill"></i>
+                              <% } %>
+                                <% for (let i=review.rating + 1; i <=5; i++) { %>
+                                  <i class="bi bi-star"></i>
+                                  <% } %>
+                          </div>
+                          <small class="text-muted d-block mt-1">
+                            <%= new Date(review.created_at).toLocaleDateString("en-IN", { year: "numeric" ,
+                              month: "short" , day: "numeric" }) %>
+                          </small>
+                        </div>
+                      </div>
+
+                      <!-- Review Comment with Big Quotation Mark -->
+                      <p class="mb-0 text-muted fs-6">
+                        ❛ <%= review.comment %>
+                      </p>
+                    </div>
+                    <% }) %>
+
+                      <div class="text-end">
+                        <a href="/listings/<%= listing._id %>/reviews"
+                          class="btn btn-outline-secondary rounded-pill px-4">
+                          See All Reviews
+                        </a>
+                      </div>
+                      <% } %>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+      function confirmDelete() {
+        return confirm("Are you sure you want to delete this listing? This action cannot be undone.");
+      }
+    </script>
+  </body>

@@ -1,0 +1,20 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<body>
+  <div class="container text-center d-flex flex-column justify-content-center align-items-center" style="min-height: 80vh;">
+    <!-- Cartoon Illustration -->
+      <img src= "https://raw.githubusercontent.com/abpframework/abp/dev/docs/en/Community-Articles/2024-02-12-Global-Error-Handling-in-Angular/error_handling.jpg" alt="Cartoon Error" class="img-fluid"
+      alt="Error Illustration" 
+      class="img-fluid mb-4" 
+      style="max-width: 300px; border-radius: 1rem;"
+    >
+
+    <!-- Error Message -->
+    <h1 class="display-5 fw-bold text-danger">Oops! <%= err.message || 'Unexpected error occurred. Please try again later.' %></h1>
+
+    <!-- Back to home -->
+    <a href="/" class="btn btn-outline-danger btn-lg rounded-pill px-4">
+      <i class="bi bi-house-door-fill"></i> Back to Home
+    </a>
+  </div>
+</body>

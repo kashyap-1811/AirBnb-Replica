@@ -1,0 +1,177 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<body>
+    <br>
+    <div class="hero-section">
+      <section class="hero-slider position-relative text-white py-5">
+        <!-- Background layer -->
+        <div class="bg-image position-absolute top-0 start-0 w-100 h-100"></div>
+
+        <!-- Content layer -->
+        <div class="content position-relative text-center z-1">
+          <h1 class="display-4 fw-bold text-danger" data-aos="fade-right">Find your next stay</h1>
+          <p class="lead text-muted" data-aos="fade-right" data-aos-delay="200">
+            <b>Discover unique places to stay and make unforgettable memories with our curated listings.</b>
+          </p>
+          <a href="/listings" id="dynamic-button" class="btn btn-danger btn-lg rounded-pill mt-3 px-4">
+            <span id="button-text"></span>
+          </a>
+        </div>
+      </section>
+    </div>
+
+
+    <!-- Facilities -->
+    <section class="bg-light py-5" data-aos="fade-up">
+      <div class="container">
+        <h2 class="text-center fw-bold mb-5" data-aos="fade-up">What We Offer</h2>
+        <div class="row text-center">
+          <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="100">
+            <img src="https://cdn-icons-png.flaticon.com/512/1946/1946433.png" alt="Comfortable Stays" class="mb-3"
+              style="width: 60px;">
+            <h5 class="mt-2">Comfortable Stays</h5>
+            <p class="text-muted">Curated listings that feel like home, anywhere you go.</p>
+          </div>
+          <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="200">
+            <img src="https://cdn-icons-png.flaticon.com/512/751/751849.png" alt="Verified Hosts" class="mb-3"
+              style="width: 60px;">
+            <h5 class="mt-2">Verified Hosts</h5>
+            <p class="text-muted">Stay with confidence with trusted and verified hosts.</p>
+          </div>
+          <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="300">
+            <img src="https://cdn-icons-png.flaticon.com/512/483/483356.png" alt="Free Wi-Fi" class="mb-3"
+              style="width: 60px;">
+            <h5 class="mt-2">Free Wi-Fi</h5>
+            <p class="text-muted">All properties come with fast and reliable Wi-Fi access.</p>
+          </div>
+          <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="400">
+            <img src="https://cdn-icons-png.flaticon.com/512/3176/3176290.png" alt="Global Reach" class="mb-3"
+              style="width: 60px;">
+            <h5 class="mt-2">Global Reach</h5>
+            <p class="text-muted">Explore listings in top cities and scenic destinations worldwide.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-5 bg-white" data-aos="fade-up">
+      <div class="container">
+        <h2 class="text-center fw-bold mb-5" data-aos="fade-up">What Our Guests Say</h2>
+        <div class="row text-center">
+          <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+            <img
+              src="https://static.vecteezy.com/system/resources/previews/008/437/407/non_2x/female-icon-for-website-symbol-presentation-free-vector.jpg"
+              alt="Sneha" class="rounded-circle mb-3" style="width: 100px;">
+            <blockquote class="blockquote">
+              <p>"This platform helped me find the coziest home during my solo trip. Highly recommend!"</p>
+              <footer class="blockquote-footer">Sneha, Mumbai</footer>
+            </blockquote>
+          </div>
+          <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+            <img src="https://cdn.pixabay.com/photo/2016/08/20/05/38/avatar-1606916_1280.png" alt="Arjun"
+              class="rounded-circle mb-3" style="width: 100px;">
+            <blockquote class="blockquote">
+              <p>"Clean, safe, and easy to book. It felt just like home!"</p>
+              <footer class="blockquote-footer">Arjun, Bangalore</footer>
+            </blockquote>
+          </div>
+          <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="300">
+            <img src="https://cdn-icons-png.freepik.com/256/15675/15675868.png?semt=ais_hybrid" alt="Neha"
+              class="rounded-circle mb-3" style="width: 100px;">
+            <blockquote class="blockquote">
+              <p>"I was amazed by the variety of stays — from beach houses to mountain cottages!"</p>
+              <footer class="blockquote-footer">Neha, Delhi</footer>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 1000,
+        once: false,   // Animate on scroll repeatedly
+        mirror: true   // Animate when scrolling up too
+      });
+    </script>
+
+    <script>
+      const bgImageDiv = document.querySelector('.hero-slider .bg-image');
+      const images = [
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDalECwHUIWjxDoTEkDOLfNYYTmPaygK0xpQ&s',
+        'https://res.cloudinary.com/worldpackers/image/upload/c_limit,f_auto,q_auto,w_1140/deflfyqfahzdiyzmxpjt',
+        'https://www.travelandleisure.com/thmb/rbPz5_6COrWFh94qFRHYLJrRM-g=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/iguazu-falls-argentina-brazil-MOSTBEAUTIFUL0921-e967cc4764ca4eb2b9941bd1b48d64b5.jpg',
+        'https://media.istockphoto.com/id/1044022268/photo/compass-of-tourists-on-mountain-at-sunset-sky.jpg?s=612x612&w=0&k=20&c=VOEdiRNfZhpEu9wNQqYeq1Arjr9AFgVZ8xFDgTJGx_8=',
+        'https://media.istockphoto.com/id/1438494420/photo/beautiful-view-with-ulriken-cable-car-and-sunset-seen-from-the-mount-ulriken-in-bergen-norway.jpg?s=612x612&w=0&k=20&c=rgyBup7_fTYUTd6UKBgx2MPzcEjTNaANI3nj9jDdFHk=',
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROLXV7ssreR77_gYKm0t_R96Wp_R76dUJwPQ&s',
+      ];
+
+      let currentImageIndex = 0;
+
+      function changeBackground() {
+        bgImageDiv.classList.add("fade-out");
+
+        setTimeout(() => {
+          bgImageDiv.style.backgroundImage = `url('${images[currentImageIndex]}')`;
+          bgImageDiv.classList.remove("fade-out");
+          currentImageIndex = (currentImageIndex + 1) % images.length;
+        }, 600);
+      }
+
+      // Initial background
+      bgImageDiv.style.backgroundImage = `url('${images[0]}')`;
+      setInterval(changeBackground, 4000);
+    </script>
+
+
+    <script>
+      const phrases = ["Explore Listings", "Travel World", "Visit Your Dream"];
+      let current = 0;
+      const textSpan = document.getElementById("button-text");
+
+      function typeText(text) {
+        textSpan.innerHTML = "";
+        let delay = 0;
+        for (let i = 0; i < text.length; i++) {
+          const charSpan = document.createElement("span");
+          charSpan.textContent = text[i];
+
+          setTimeout(() => {
+            textSpan.appendChild(charSpan);
+            // Force reflow before adding visible class for animation
+            void charSpan.offsetWidth;
+            charSpan.classList.add("visible");
+          }, delay);
+
+          delay += 80;
+        }
+      }
+
+      function clearText(callback) {
+        const spans = Array.from(textSpan.querySelectorAll("span")).reverse();
+        let delay = 0;
+        spans.forEach((span, i) => {
+          setTimeout(() => {
+            span.classList.remove("visible");
+            if (i === spans.length - 1 && callback) callback();
+          }, delay);
+          delay += 40;
+        });
+      }
+
+      function cycleText() {
+        const next = (current + 1) % phrases.length;
+        clearText(() => {
+          current = next;
+          setTimeout(() => typeText(phrases[current]), 200);
+        });
+      }
+
+      // Start
+      typeText(phrases[current]);
+      setInterval(cycleText, 3000);
+    </script>
+
+</body>

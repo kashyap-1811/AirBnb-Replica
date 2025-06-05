@@ -1,0 +1,27 @@
+<nav class="navbar navbar-expand-md bg-light border-bottom fixed-top py-3">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/"><i class="fa-solid fa-compass"></i></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <!-- Left Side Links -->
+      <div class="navbar-nav">
+        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="/listings">All Listings</a>
+        <a class="nav-link" href="/listings/new">Add new Listings</a>
+      </div>
+      <!-- Right Side Links -->
+      <div class="navbar-nav ms-auto">
+        <% if (!loggedIN) { %>
+          <a class="nav-link" href="/login">Login</a>
+          <a class="nav-link" href="/signup">Sign Up</a>
+        <% } else { %>
+          <!-- Optionally, show username and logout if logged in -->
+          <a class="nav-link" href="#">Hello, <%= user.username %></a>
+          <a class="nav-link" href="/logout">Logout</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,41 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-lg rounded-4">
+                    <div class="card-body p-4">
+                        <h3 class="card-title mb-4 fw-bold">Edit Review</h3>
+                        <form action="/listings/<%= listingId %>/reviews/<%= review._id %>?_method=PUT" method="POST">
+                            <!-- Comment -->
+                            <div class="mb-3">
+                                <label for="comment" class="form-label">Your Comment</label>
+                                <textarea name="review[comment]" id="comment" class="form-control" rows="4"
+                                    required><%= review.comment %></textarea>
+                            </div>
+
+                            <!-- Rating -->
+                            <div class="mb-4">
+                                <label for="rating" class="form-label">Rating</label>
+                                <select name="review[rating]" id="rating" class="form-select" required>
+                                    <% for (let i = 1; i <= 5; i++) { %>
+                                        <option value="<%= i %>" <%= review.rating === i ? 'selected' : '' %>>
+                                            <%= i %> Star<%= i > 1 ? 's' : '' %>
+                                        </option>
+                                    <% } %>
+                                </select>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="d-flex justify-content-between">
+                                <a href="/listings/<%= listingId %>/reviews" class="btn btn-secondary rounded-pill px-4">Cancel</a>
+                                <button type="submit" class="btn btn-success rounded-pill px-4">Update Review</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

@@ -1,21 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WanderLust</title>
-</head>
-<body>
-    <h1>All Listings</h1>
+<% layout("/layouts/boilerplate.ejs") %>
 
-    <form method="GET" action="/listings/new">
-        <button>Create New</button>
-    </form>
+    <body>
+        <div class="container mt-5 mb-5">
+            <div class="text-center mb-4" data-aos="zoom-in">
+                <h1 class="fw-bold">Explore All Listings</h1>
+            </div>
 
-    <ul>
-        <% for(let listing of allListings){ %>
-            <li> <a href="/listings/<%= listing._id %>"> <%= listing.title %> </a></li>
-        <% } %>
-    </ul>
-</body>
-</html>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <% for (let listing of allListings) { %>
+                    <div class="col" data-aos="fade-up" data-aos-delay="<%= (Math.random() * 300).toFixed(0) %>">
+                        <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
+                            <div class="card h-100 shadow-lg rounded-4 overflow-hidden">
+                                <img src="<%= listing.image.url %>" alt="Listing Image" class="card-img-top"
+                                    style="height: 18rem; object-fit: cover;">
+
+                                <div class="card-body d-flex flex-column justify-content-between p-4"
+                                    style="height: 11rem;">
+                                    <div>
+                                        <h5 class="card-title fw-bold mb-2 text-truncate">
+                                            <%= listing.title %>
+                                        </h5>
+                                        <p class="card-text text-muted mb-3 description-truncate"
+                                            title="<%= listing.description %>">
+                                            <%= listing.description %>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p class="card-text fs-5 text-primary fw-semibold mb-0">
+                                            ₹ <%= listing.price.toLocaleString("en-IN") %> <small
+                                                    class="text-muted">/night</small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <% } %>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        document.querySelectorAll('.description-truncate').forEach((el) => {
+            const maxLines = 3;
+            const lineHeight = parseFloat(getComputedStyle(el).lineHeight);
+            const maxHeight = maxLines * lineHeight;
+
+            if (el.scrollHeight > maxHeight) {
+                el.style.maxHeight = `${maxHeight}px`;
+                el.style.overflow = 'hidden';
+                el.style.textOverflow = 'ellipsis';
+            }
+        });
+    </script>
