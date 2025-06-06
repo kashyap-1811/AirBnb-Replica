@@ -5,9 +5,23 @@ const { listingSchema } = require('../schemas/schema.js');
 
 //------------------------------------------------------------------------------------------------
 //all listings page -> index
+const validCategories = [
+  'trending', 'mountains', 'beach', 'desert', 'farms',
+  'arctic', 'countryside', 'iconic-cities', 'camping',
+  'lake', 'caves', 'tropical'
+];
+
 module.exports.index = wrapAsync(async (req, res) => {
-    const allListings = await Listing.find({});
-    res.render('listings/index.ejs', { allListings });
+  const category = req.query.category;
+  let filter = {};
+
+  if (category && validCategories.includes(category)) {
+    // Use $in for array matching categories
+    filter.categories = category;
+  }
+
+  const allListings = await Listing.find(filter).populate('owner').populate('reviews');
+  res.render('listings/index', { allListings, selectedCategory: category || '' });
 });
 
 //------------------------------------------------------------------------------------------------
@@ -17,7 +31,7 @@ module.exports.newListingForm = (req, res) => {
 };
 
 module.exports.newListingPost = wrapAsync(async (req, res, next) => {
-    const { error } = listingSchema.validate(req.body.Listing);
+    const { error } = listingSchema.validate(req.body.Listing); // Joi validation
     if (error) {
         const msg = error.details.map(el => el.message).join(', ');
         throw new ExpressError(400, msg);
@@ -25,15 +39,25 @@ module.exports.newListingPost = wrapAsync(async (req, res, next) => {
 
     const { title, description, price, location, country } = req.body.Listing;
 
+    // Normalize categories input: always treat it as an array
+    let categories = req.body.categories || [];
+    if (!Array.isArray(categories)) {
+        categories = [categories]; // convert single value to array
+    }
+
+    // Optional: Ensure all category values are in lowercase to match your schema enum
+    categories = categories.map(cat => cat.toLowerCase());
+
     const newListing = new Listing({
         title,
         description,
         price,
         location,
         country,
+        categories, // ✅ enum-safe after lowercasing
         image: {
-            filename: req.file.filename,
-            url: req.file.path || undefined,
+            filename: req.file?.filename || '',
+            url: req.file?.path || '',
         },
         owner: req.user._id,
     });
@@ -68,8 +92,15 @@ module.exports.updateListingForm = wrapAsync(async (req, res) => {
 });
 
 module.exports.updateListing = wrapAsync(async (req, res) => {
-    let {id} = req.params;
-    const { title, description, price, location, country, image } = req.body;
+    const { id } = req.params;
+    const { title, description, price, location, country, categories } = req.body;
+
+    // Normalize categories (always an array, filter out empty values)
+    let normalizedCategories = categories || [];
+    if (!Array.isArray(normalizedCategories)) {
+        normalizedCategories = [normalizedCategories];
+    }
+    normalizedCategories = normalizedCategories.filter(cat => cat && cat.trim() !== '');
 
     const updatedData = {
         title,
@@ -77,13 +108,15 @@ module.exports.updateListing = wrapAsync(async (req, res) => {
         price,
         location,
         country,
+        categories: normalizedCategories,
     };
 
-    if(req.file){
+    // If a new image was uploaded
+    if (req.file) {
         updatedData.image = {
             filename: req.file.filename,
             url: req.file.path,
-        }
+        };
     }
 
     await Listing.findByIdAndUpdate(id, updatedData, { runValidators: true });
