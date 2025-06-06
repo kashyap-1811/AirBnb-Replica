@@ -28,7 +28,7 @@ router.get('/:id', ListingController.showListing);
 // update route
 router.get('/:id/edit', isLoggedIn, isOwner, ListingController.updateListingForm);
 
-router.patch('/:id', isLoggedIn, isOwner, ListingController.updateListing);
+router.patch('/:id', isLoggedIn, isOwner, upload.single('image[url]'), ListingController.updateListing);
 
 //------------------------------------------------------------------------------------------------
 // delete route

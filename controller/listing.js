@@ -68,6 +68,7 @@ module.exports.updateListingForm = wrapAsync(async (req, res) => {
 });
 
 module.exports.updateListing = wrapAsync(async (req, res) => {
+    let {id} = req.params;
     const { title, description, price, location, country, image } = req.body;
 
     const updatedData = {
@@ -78,8 +79,11 @@ module.exports.updateListing = wrapAsync(async (req, res) => {
         country,
     };
 
-    if (image?.url) {
-        updatedData.image = { url: image.url };
+    if(req.file){
+        updatedData.image = {
+            filename: req.file.filename,
+            url: req.file.path,
+        }
     }
 
     await Listing.findByIdAndUpdate(id, updatedData, { runValidators: true });

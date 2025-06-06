@@ -15,7 +15,7 @@
                     <h3 class="mb-4 text-center fw-semibold">Edit Listing</h3>
 
                     <form method="POST" action="/listings/<%= listing._id %>?_method=PATCH" class="needs-validation"
-                        novalidate onsubmit="return confirmEdit();">
+                        novalidate onsubmit="return confirmEdit();" enctype="multipart/form-data">
                         <!-- Title -->
                         <div class="mb-3">
                             <label for="title" class="form-label">Title</label>
@@ -63,11 +63,9 @@
 
                         <!-- Image URL -->
                         <div class="mb-4">
-                            <label for="image" class="form-label">Image URL</label>
-                            <input type="url" class="form-control rounded-pill" id="image" name="image[url]"
-                                value="<%= listing.image.url %>" required>
-                            <div class="valid-feedback">Looks good!</div>
-                            <div class="invalid-feedback">Please enter a valid image URL.</div>
+                            <label for="image" class="form-label">Upload Image</label>
+                            <input type="file" class="form-control rounded-pill" id="image" name="image[url]"
+                                value="<%= listing.image.url %>">
                         </div>
 
                         <div class="d-grid">
