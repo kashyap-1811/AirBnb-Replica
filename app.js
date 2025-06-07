@@ -34,28 +34,43 @@ app.use(express.json());
 app.use(methodOverride('_method'));
 
 //------------------------------------------------------------------------------------------------
-
-main()
-    .then(() => { console.log("Connected to MongoDB") })
-    .catch(err => console.log(err));
+const cloudDB = `mongodb+srv://kashyaprupareliya1811:${process.env.password}@cluster0.cq5doyt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 async function main() {
-    await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
+    await mongoose.connect(cloudDB)
+  .then(() => console.log("✅ Connected to MongoDB"))
+  .catch(err => console.log("❌ MongoDB Connection Error:", err));
 }
+
+main();
 
 //------------------------------------------------------------------------------------------------
 //Sessions
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
+
+const store = MongoStore.create({
+    mongoUrl: cloudDB,
+    crypto: {
+        secret: process.env.secret,
+    },
+    touchAfter: 24 * 3600,
+});
+
+store.on("error" , (err) => {
+    console.log("ERROR IN MONGO STORE.", err)
+});
 
 const sessionOption = {
-    secret: "mysecretcode",
+    store: store,
+    secret: process.env.secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
         expires: Date.now() + 7*24*60*60*1000,
         maxAge: 7*24*60*60*1000,
         httpOnly: true,
-    }
+    },
 };
 
 app.use(session(sessionOption));

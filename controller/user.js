@@ -14,8 +14,8 @@ module.exports.signup = wrapAsync(async (req, res) => {
         const newUser = new User({ email, username });
         const registeredUser = await User.register(newUser, password);
         // On success, redirect or render wherever you want
-        req.flash("success", `Hello ${username}`);
-        res.redirect('/');
+        req.flash("success", `you have registered please login to enter.`);
+        res.redirect('/login');
     } catch (err) {
         // Send back username and error message to render below the username field
         res.status(400).render('users/signup.ejs', { 
