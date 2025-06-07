@@ -21,8 +21,9 @@ router.get('/new', isLoggedIn, ListingController.newListingForm);
 router.post('/', upload.single('Listing[image][url]'), ListingController.newListingPost);
 
 //------------------------------------------------------------------------------------------------
-// show route
-router.get('/:id', ListingController.showListing);
+//search
+// Route: GET /listings/search?location=xyz
+router.get('/search', ListingController.search);
 
 //------------------------------------------------------------------------------------------------
 // update route
@@ -35,7 +36,9 @@ router.patch('/:id', isLoggedIn, isOwner, upload.single('image[url]'), ListingCo
 router.delete('/:id', isLoggedIn, isOwner, ListingController.deleteListing);
 
 //------------------------------------------------------------------------------------------------
-//export
-module.exports = router;
+// show route
+router.get('/:id', ListingController.showListing);
 
 //------------------------------------------------------------------------------------------------
+//export
+module.exports = router;

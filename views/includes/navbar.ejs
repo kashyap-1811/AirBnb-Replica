@@ -11,16 +11,28 @@
         <a class="nav-link" href="/listings">Explore</a>
         <a class="nav-link" href="/listings/new">Add new Listings</a>
       </div>
+
+      <!-- Centered Search Form -->
+      <form class="d-flex mx-auto my-2" role="search" action="/listings/search" method="GET"
+        style="max-width: 400px; width: 100%;">
+        <input class="form-control me-2 rounded-pill" type="search" placeholder="Search by location" aria-label="Search"
+          name="location" required>
+        <button class="btn btn-outline-primary rounded-pill d-flex align-items-center px-3" type="submit">
+          <i class="fas fa-search me-1"></i> Search
+        </button>
+      </form>
+
+
       <!-- Right Side Links -->
       <div class="navbar-nav ms-auto">
         <% if (!loggedIN) { %>
           <a class="nav-link" href="/login">Login</a>
           <a class="nav-link" href="/signup">Sign Up</a>
-        <% } else { %>
-          <!-- Optionally, show username and logout if logged in -->
-          <a class="nav-link" href="#">Hello, <%= user.username %></a>
-          <a class="nav-link" href="/logout">Logout</a>
-        <% } %>
+          <% } else { %>
+            <!-- Optionally, show username and logout if logged in -->
+            <a class="nav-link" href="#">Hello, <%= user.username %></a>
+            <a class="nav-link" href="/logout">Logout</a>
+            <% } %>
       </div>
     </div>
   </div>

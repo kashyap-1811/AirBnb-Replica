@@ -135,6 +135,25 @@ module.exports.deleteListing = wrapAsync(async (req, res) => {
 });
 
 //------------------------------------------------------------------------------------------------
+module.exports.search = async (req, res) => {
+  const { location } = req.query;
 
+  // Handle empty input safely
+  if (!location) {
+    req.flash('error', 'Please enter a location.');
+    return res.redirect('/listings');
+  }
+
+  // Case-insensitive search using RegExp
+  const allListings = await Listing.find({
+    location: { $regex: location, $options: 'i' }
+  });
+
+  if (allListings.length === 0) {
+    req.flash('info', `No listings found for "${location}".`);
+  }
+
+  res.render('listings/index', { allListings, selectedCategory: '' });
+};
 
 //------------------------------------------------------------------------------------------------
