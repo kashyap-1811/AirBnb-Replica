@@ -34,7 +34,7 @@ app.use(express.json());
 app.use(methodOverride('_method'));
 
 //------------------------------------------------------------------------------------------------
-const cloudDB = `mongodb+srv://kashyaprupareliya1811:${process.env.password}@cluster0.cq5doyt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const cloudDB = `mongodb+srv://kashyaprupareliya1811:${process.env.password}@cluster0.cq5doyt.mongodb.net/wanderlust-atlas?retryWrites=true&w=majority&appName=Cluster0`;
 
 async function main() {
     await mongoose.connect(cloudDB)
